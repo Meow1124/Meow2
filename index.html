@@ -3,34 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meow QR Scanner</title>
+    <title>Meow QR Scanner 123</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Meow QR Scanner</h1>
+    <h1>Meow QR Scanner 123</h1>
 
-        <div class="file-upload">
-            <p id="file-name">No file chosen</p>
-            <input type="file" accept="image/*" onchange="updateFileName(event); scanFromFile(event);">
-        </div>
+    <!-- Mobile: Direct Scan -->
+    <button id="scan-qr" onclick="startScanner()">Scan QR Code</button>
 
-        <div id="mobile-controls">
-            <button onclick="switchCamera()">Switch Camera</button>
-            <button onclick="toggleFlashlight()">Toggle Flashlight</button>
-        </div>
+    <!-- Scanner Area -->
+    <div id="reader"></div>
 
-        <div id="reader"></div>
-        
-        <div id="pc-result">
-            <h2>Scanned URL:</h2>
-            <p id="result">No QR code scanned yet.</p>
-            <button onclick="copyResult()">Copy</button>
-        </div>
+    <!-- File Upload (PC) -->
+    <div class="file-upload">
+        <input type="file" accept="image/*" onchange="scanFromFile(event);">
     </div>
 
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <!-- Result for PC -->
+    <div id="pc-result" style="display: none;">
+        <p>Scanned Link:</p>
+        <input type="text" id="result" readonly>
+        <button onclick="copyLink()">Copy Link</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
