@@ -5,9 +5,32 @@ let restartScannerBtn = document.getElementById("restartScanner");
 let qrText = document.getElementById("qrText");
 let qrResult = document.getElementById("qrResult");
 let copyLinkBtn = document.getElementById("copyLink");
+let permissionBox = document.getElementById("permissionBox");
+let grantPermissionBtn = document.getElementById("grantPermission");
 
 let currentCamera = "environment"; // Default to back camera
 let stream = null;
+
+// Request camera permission
+async function requestCameraPermission() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        permissionBox.style.display = "none";
+        startCamera();
+    } catch (err) {
+        alert("Camera access denied. Please enable it in browser settings.");
+    }
+}
+
+// Show permission box if needed
+async function checkCameraAccess() {
+    try {
+        await navigator.mediaDevices.getUserMedia({ video: true });
+        startCamera();
+    } catch (err) {
+        permissionBox.style.display = "block";
+    }
+}
 
 // Start camera with back camera
 async function startCamera() {
@@ -77,6 +100,11 @@ copyLinkBtn.onclick = () => {
     alert("Link copied!");
 };
 
+// Handle permission button click
+grantPermissionBtn.onclick = () => {
+    requestCameraPermission();
+};
+
 // Start everything
-startCamera();
+checkCameraAccess();
 scanQRCode();
