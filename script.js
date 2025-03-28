@@ -98,4 +98,5 @@ function updateFileName(event) {
     const fileInput = event.target;
     const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file chosen";
     document.getElementById("file-name").innerText = fileName;
-}
+            }
+        
