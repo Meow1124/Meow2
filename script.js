@@ -4,14 +4,13 @@ let flashlightBtn = document.getElementById("toggleFlashlight");
 let restartScannerBtn = document.getElementById("restartScanner");
 let qrText = document.getElementById("qrText");
 let qrResult = document.getElementById("qrResult");
-let copyLinkBtn = document.getElementById("copyLink");
 let permissionBox = document.getElementById("permissionBox");
 let grantPermissionBtn = document.getElementById("grantPermission");
 
 let currentCamera = "environment"; // Default to back camera
 let stream = null;
 
-// Check camera permission
+// Function to check camera permission
 async function checkCameraAccess() {
     try {
         let devices = await navigator.mediaDevices.enumerateDevices();
@@ -25,26 +24,29 @@ async function checkCameraAccess() {
         let mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
         mediaStream.getTracks().forEach(track => track.stop());
 
-        permissionBox.style.display = "none"; // Hide permission box
+        // Permission granted
+        permissionBox.style.display = "none"; // Hide permission button
         startCamera();
     } catch (err) {
-        console.warn("Camera access denied.");
-        permissionBox.style.display = "block"; // Show permission request UI
+        console.warn("Camera access denied or not yet requested.");
+        permissionBox.style.display = "block"; // Show permission button
     }
 }
 
-// Request camera permission
+// Function to request camera permission
 async function requestCameraPermission() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        permissionBox.style.display = "none"; // Hide permission box
+
+        // Hide permission request box after permission is granted
+        permissionBox.style.display = "none";
         startCamera();
     } catch (err) {
-        alert("Camera access denied. Please allow it in browser settings.");
+        alert("Camera access denied. Please enable it in browser settings.");
     }
 }
 
-// Start camera
+// Function to start camera
 async function startCamera() {
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
@@ -57,37 +59,18 @@ async function startCamera() {
     video.srcObject = stream;
 }
 
-// Switch camera
+// Switch camera button functionality
 switchCameraBtn.onclick = () => {
     currentCamera = currentCamera === "environment" ? "user" : "environment";
     startCamera();
 };
 
-// QR Code Scanner
-async function scanQRCode() {
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
+// Handle permission request button click
+grantPermissionBtn.onclick = () => {
+    requestCameraPermission();
+};
 
-    setInterval(() => {
-        if (video.readyState === video.HAVE_ENOUGH_DATA) {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            let code = jsQR(imageData.data, canvas.width, canvas.height, { inversionAttempts: "attemptBoth" });
-
-            if (code) {
-                qrResult.style.display = "block";
-                qrText.innerText = code.data;
-
-                if (window.innerWidth < 768) {
-                    window.open(code.data, "_blank");
-                }
-            }
-        }
-    }, 500);
-}
-
-// Flashlight toggle
-flashlightBtn
+// Initialize permission check when the page loads
+window.onload = () => {
+    checkCameraAccess();
+};
