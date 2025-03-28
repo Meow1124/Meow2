@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meow QR Scanner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Meow QR Scanner</h1>
+
+        <div class="file-upload">
+            <p id="file-name">No file chosen</p>
+            <input type="file" accept="image/*" onchange="updateFileName(event); scanFromFile(event);">
+        </div>
+
+        <div id="mobile-controls">
+            <button onclick="switchCamera()">Switch Camera</button>
+            <button onclick="toggleFlashlight()">Toggle Flashlight</button>
+        </div>
+
+        <div id="reader"></div>
+        
+        <div id="pc-result">
+            <h2>Scanned URL:</h2>
+            <p id="result">No QR code scanned yet.</p>
+            <button onclick="copyResult()">Copy</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+</body>
+</html>

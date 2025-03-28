@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(45deg, #ff758c, #ff7eb3);
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: black;
+}
+
+h1 {
+    color: #ff758c;
+}
+
+#reader {
+    width: 100%;
+    max-width: 300px;
+    margin: auto;
+}
+
+/* Center file input and show file name above */
+.file-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+}
+
+#file-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="file"] {
+    background: #ff758c;
+    color: white;
+    padding: 15px; /* Larger button */
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background: #ff7eb3;
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #ff758c;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff4d6d;
+}
+
+/* Hide mobile controls on PC */
+@media screen and (min-width: 768px) {
+    #mobile-controls { display: none; }
+}
+
+/* Hide PC results on mobile */
+@media screen and (max-width: 767px) {
+    #pc-result { display: none; }
+}
