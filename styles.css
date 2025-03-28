@@ -1,28 +1,46 @@
-e; }
-}
+/* Light Mode */
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(45deg, #ff758c, #ff7eb3);
+    background: #FFE4C4;
+    color: black;
     text-align: center;
     padding: 10px;
-    color: #fff;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #2C2C2C;
+        color: white;
+    }
+
+    .container {
+        background: #3A3A3A;
+        color: white;
+    }
+
+    a {
+        color: #FF8C00; /* Dark Orange */
+    }
+
+    input[type="file"] {
+        background: #000; /* Black */
+        color: white;
+    }
 }
 
 .container {
     max-width: 400px;
     margin: auto;
-    background: #fff;
+    background: white;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    color: black;
+    transition: background 0.3s, color 0.3s;
 }
 
-h1 {
-    color: #ff758c;
-}
-
-/* Center file input and show file name above */
+/* Make Choose File Button Bigger */
 .file-upload {
     display: flex;
     flex-direction: column;
@@ -30,30 +48,14 @@ h1 {
     margin: 10px 0;
 }
 
-#file-name {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
 input[type="file"] {
     background: #ff758c;
     color: white;
-    padding: 15px; /* Larger button */
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-}
-
-input[type="file"]::-webkit-file-upload-button {
-    background: #ff7eb3;
-    color: white;
-    border: none;
     padding: 15px;
-    cursor: pointer;
-    border-radius: 5px;
     font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 button {
