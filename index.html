@@ -5,30 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meow QR Scanner 123</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
+    <div class="container">
+        <h1>QR Code Scanner</h1>
+        <input type="file" id="fileInput" class="file-input" accept="image/*">
+        <div id="selectedFileName"></div>
 
-    <h1>Meow QR Scanner 123</h1>
+        <div id="scanner">
+            <video id="video" autoplay></video>
+            <button id="switchCamera">Switch Camera</button>
+            <button id="toggleFlashlight">Toggle Flashlight</button>
+            <button id="restartScanner">Restart Scanner</button>
+        </div>
 
-    <!-- Mobile: Direct Scan -->
-    <button id="scan-qr" onclick="startScanner()">Scan QR Code</button>
-
-    <!-- Scanner Area -->
-    <div id="reader"></div>
-
-    <!-- File Upload (PC) -->
-    <div class="file-upload">
-        <input type="file" accept="image/*" onchange="scanFromFile(event);">
+        <div id="qrResult">
+            <p id="qrText"></p>
+            <button id="copyLink">Copy Link</button>
+        </div>
     </div>
 
-    <!-- Result for PC -->
-    <div id="pc-result" style="display: none;">
-        <p>Scanned Link:</p>
-        <input type="text" id="result" readonly>
-        <button onclick="copyLink()">Copy Link</button>
-    </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.3.1/jsQR.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
