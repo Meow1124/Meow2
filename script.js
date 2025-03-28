@@ -1,45 +1,82 @@
-// Start QR scanner immediately on mobile
-function startScanner() {
-    const qrScanner = new Html5Qrcode("reader");
+let video = document.getElementById("video");
+let switchCameraBtn = document.getElementById("switchCamera");
+let flashlightBtn = document.getElementById("toggleFlashlight");
+let restartScannerBtn = document.getElementById("restartScanner");
+let qrText = document.getElementById("qrText");
+let qrResult = document.getElementById("qrResult");
+let copyLinkBtn = document.getElementById("copyLink");
 
-    qrScanner.start(
-        { facingMode: "environment" }, // Use the back camera
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-            handleScanResult(decodedText);
-        }
-    );
-}
+let currentCamera = "environment"; // Default to back camera
+let stream = null;
 
-// Handle scan result (Auto Redirect on Mobile)
-function handleScanResult(decodedText) {
-    if (window.innerWidth < 768) {
-        window.open(decodedText, "_blank"); // Mobile: Open link in new tab
-    } else {
-        document.getElementById("result").value = decodedText; // PC: Show link
-        document.getElementById("pc-result").style.display = "block";
+// Start camera with back camera
+async function startCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
     }
+
+    stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: currentCamera }
+    });
+
+    video.srcObject = stream;
 }
 
-// Scan QR code from an uploaded file
-function scanFromFile(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+// Switch camera
+switchCameraBtn.onclick = () => {
+    currentCamera = currentCamera === "environment" ? "user" : "environment";
+    startCamera();
+};
 
-    const qrScanner = new Html5Qrcode("reader");
-    qrScanner.scanFile(file, true)
-        .then((decodedText) => {
-            handleScanResult(decodedText);
-        })
-        .catch((error) => {
-            alert("QR Code not detected. Try another image.");
-        });
+// QR Code Scanner
+async function scanQRCode() {
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+
+    setInterval(() => {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let code = jsQR(imageData.data, canvas.width, canvas.height, { inversionAttempts: "attemptBoth" });
+
+            if (code) {
+                qrResult.style.display = "block";
+                qrText.innerText = code.data;
+
+                if (window.innerWidth < 768) {
+                    window.open(code.data, "_blank");
+                }
+            }
+        }
+    }, 500);
 }
 
-// Copy link to clipboard (PC mode)
-function copyLink() {
-    const resultInput = document.getElementById("result");
-    resultInput.select();
-    document.execCommand("copy");
+// Flashlight toggle
+flashlightBtn.onclick = async () => {
+    let track = stream.getVideoTracks()[0];
+    let capabilities = track.getCapabilities();
+
+    if (capabilities.torch) {
+        let settings = track.getSettings();
+        let constraints = { advanced: [{ torch: !settings.torch }] };
+        await track.applyConstraints(constraints);
+    }
+};
+
+// Restart scanner
+restartScannerBtn.onclick = () => {
+    startCamera();
+};
+
+// Copy link button
+copyLinkBtn.onclick = () => {
+    navigator.clipboard.writeText(qrText.innerText);
     alert("Link copied!");
-}
+};
+
+// Start everything
+startCamera();
+scanQRCode();
