@@ -1,3 +1,5 @@
+e; }
+}
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(45deg, #ff758c, #ff7eb3);
@@ -18,12 +20,6 @@ body {
 
 h1 {
     color: #ff758c;
-}
-
-#reader {
-    width: 100%;
-    max-width: 300px;
-    margin: auto;
 }
 
 /* Center file input and show file name above */
