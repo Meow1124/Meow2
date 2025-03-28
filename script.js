@@ -11,28 +11,40 @@ let grantPermissionBtn = document.getElementById("grantPermission");
 let currentCamera = "environment"; // Default to back camera
 let stream = null;
 
+// Check camera permission
+async function checkCameraAccess() {
+    try {
+        let devices = await navigator.mediaDevices.enumerateDevices();
+        let hasCamera = devices.some(device => device.kind === "videoinput");
+
+        if (!hasCamera) {
+            alert("No camera found on this device.");
+            return;
+        }
+
+        let mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        mediaStream.getTracks().forEach(track => track.stop());
+
+        permissionBox.style.display = "none"; // Hide permission box
+        startCamera();
+    } catch (err) {
+        console.warn("Camera access denied.");
+        permissionBox.style.display = "block"; // Show permission request UI
+    }
+}
+
 // Request camera permission
 async function requestCameraPermission() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        permissionBox.style.display = "none";
+        permissionBox.style.display = "none"; // Hide permission box
         startCamera();
     } catch (err) {
-        alert("Camera access denied. Please enable it in browser settings.");
+        alert("Camera access denied. Please allow it in browser settings.");
     }
 }
 
-// Show permission box if needed
-async function checkCameraAccess() {
-    try {
-        await navigator.mediaDevices.getUserMedia({ video: true });
-        startCamera();
-    } catch (err) {
-        permissionBox.style.display = "block";
-    }
-}
-
-// Start camera with back camera
+// Start camera
 async function startCamera() {
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
@@ -78,33 +90,4 @@ async function scanQRCode() {
 }
 
 // Flashlight toggle
-flashlightBtn.onclick = async () => {
-    let track = stream.getVideoTracks()[0];
-    let capabilities = track.getCapabilities();
-
-    if (capabilities.torch) {
-        let settings = track.getSettings();
-        let constraints = { advanced: [{ torch: !settings.torch }] };
-        await track.applyConstraints(constraints);
-    }
-};
-
-// Restart scanner
-restartScannerBtn.onclick = () => {
-    startCamera();
-};
-
-// Copy link button
-copyLinkBtn.onclick = () => {
-    navigator.clipboard.writeText(qrText.innerText);
-    alert("Link copied!");
-};
-
-// Handle permission button click
-grantPermissionBtn.onclick = () => {
-    requestCameraPermission();
-};
-
-// Start everything
-checkCameraAccess();
-scanQRCode();
+flashlightBtn
